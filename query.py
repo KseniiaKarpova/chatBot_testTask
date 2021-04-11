@@ -15,14 +15,22 @@ class DATABASE:
 
 
     def test_connect(self):
-        show_db_query = "SHOW DATABASES"
+        #show_db_query = "SHOW DATABASES"
+        #connection = self.get_connect()
+        #with connection.cursor() as cursor:
+        #    cursor.execute(show_db_query)
+        #    for db in cursor:
+        #        print(db)
+        #cursor.close()
+        #connection.close()
         connection = self.get_connect()
         with connection.cursor() as cursor:
-            cursor.execute(show_db_query)
-            for db in cursor:
-                print(db)
-        cursor.close()
-        connection.close()
+            cursor.execute("SELECT * FROM messages;")
+
+        rows = cursor.fetchall()
+
+        for row in rows:
+            print(row)
 
 
 
@@ -37,26 +45,32 @@ class DATABASE:
         connection = self.get_connect()
         try:
             with connection.cursor() as cursor:
-                cursor.execute("""INSERT INTO messages (time,text,idsession,idclient) VALUES (%s, %s,%s,%s)""",
+                cursor.execute("""INSERT INTO messages (`time`,`text`,`idsession`,`idclient`) VALUES (%s, %s,%s,%s)""",
                                (self.data2sqlstr(time),text,id_session,id_client))
                 connection.commit()
-            cursor.close()
-            connection.close()
+
         except Exception:
             print(f'[INFO] {self.data2sqlstr(time),text,id_session,id_client}')
+        finally:
+            cursor.close()
+            connection.close()
 
 
     def new_session(self,session):
         connection = self.get_connect()
         try:
             with connection.cursor() as cursor:
-                cursor.execute("""INSERT INTO session (idsession, startTime) VALUES (%s, %s)""",
+
+                cursor.execute('INSERT INTO session (`idsession`, `startTime`) VALUES (%s, %s)',
                                (session.id,self.data2sqlstr(session.startTime)))
+
                 connection.commit()
-            cursor.close()
-            connection.close()
+
         except Exception:
             print(f'[INFO] {session.id,self.data2sqlstr(session.startTime)}')
+        finally:
+            cursor.close()
+            connection.close()
 
 
 
@@ -67,7 +81,8 @@ class DATABASE:
                 cursor.execute("""UPDATE session SET endTime=%s WHERE idsession=%s""",
                                (self.data2sqlstr(session.endTime),session.id))
                 connection.commit()
-            cursor.close()
-            connection.close()
         except Exception:
             print(f'[INFO] {self.data2sqlstr(session.endTime),session.id}')
+        finally:
+            cursor.close()
+            connection.close()

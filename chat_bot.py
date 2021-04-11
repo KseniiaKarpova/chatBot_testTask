@@ -10,8 +10,10 @@ class Bot():
         self.last = ''
         self.start_chat()
         self.start_timer()
-        self.idClient = random.getrandbits(16)
+        self.idClient = random.getrandbits(4)
         self.db = query.DATABASE()
+        #self.db.test_connect()
+        self.sessionFlag=False
 
     def start(self):
         while True:
@@ -32,13 +34,15 @@ class Bot():
             self.session.end()
             self.db.end_session(self.session)
         self.session=None
+        self.sessionFlag=False
 
     def get_emoji(self):
         emj=str(input('You:'))
         self.timeMessage=datetime.datetime.now()
-        if self.last=='':
+        if not self.sessionFlag:
             self.session=Session()
             self.db.new_session(self.session)
+            self.sessionFlag=True
         self.db.new_message(self.timeMessage, self.session.id,emj,self.idClient)
         self.change_mood(emj)
 
