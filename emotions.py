@@ -53,7 +53,7 @@ type_messages = {
 
 
 def unknown_message():
-    return "Я тебя не понимаю"
+    return "Я тебя не понимаю\nБеседа обнуляется"
 
 def choise_text(emj,Bot,last=''):
     if last != '':

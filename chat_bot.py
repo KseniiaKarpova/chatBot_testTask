@@ -64,5 +64,4 @@ class Bot():
 
     def change_mood(self,emj):
         self.print_message(emotions.choise_text(emj,self,self.last))
-        if self.last=='':
-            self.timer_message()
+
