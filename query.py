@@ -61,7 +61,7 @@ class DATABASE:
         try:
             with connection.cursor() as cursor:
 
-                cursor.execute('INSERT INTO session (`idsession`, `startTime`) VALUES (%s, %s)',
+                cursor.execute("""INSERT INTO session (`idsession`, `startTime`) VALUES (%s, %s)""",
                                (session.id,self.data2sqlstr(session.startTime)))
 
                 connection.commit()
